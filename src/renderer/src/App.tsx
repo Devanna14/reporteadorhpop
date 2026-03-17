@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, JSX } from 'react'
 import logoCompleto from './assets/logo20.png'
 
 interface Registro {
@@ -11,24 +11,25 @@ interface Registro {
 }
 
 function App(): JSX.Element {
+  const [conteo, setConteo] = useState()
   const [listaAnios, setListaAnios] = useState<number[]>([]) // Años desde SQL
   const [anio, setAnio] = useState<number>(new Date().getFullYear()) // Año seleccionado
   const [mesSeleccionado, setMesSeleccionado] = useState<number>(1)
   const [datos, setDatos] = useState<Registro[]>([])
 
   const meses = [
-    { id: 1, label: 'EN' },
-    { id: 2, label: 'FE' },
-    { id: 3, label: 'MA' },
-    { id: 4, label: 'AB' },
-    { id: 5, label: 'MA' },
-    { id: 6, label: 'JU' },
-    { id: 7, label: 'JUL' },
-    { id: 8, label: 'AG' },
-    { id: 9, label: 'SE' },
-    { id: 10, label: 'OC' },
-    { id: 11, label: 'NO' },
-    { id: 12, label: 'DIC' }
+    { id: 1, label: 'EN', nombre: 'ENERO' },
+    { id: 2, label: 'FE', nombre: 'FEBRERO' },
+    { id: 3, label: 'MA', nombre: 'MARZO' },
+    { id: 4, label: 'AB', nombre: 'ABRIL' },
+    { id: 5, label: 'MA', nombre: 'MAYO' },
+    { id: 6, label: 'JU', nombre: 'JUNIO' },
+    { id: 7, label: 'JUL', nombre: 'JULIO' },
+    { id: 8, label: 'AG', nombre: 'AGOSTO' },
+    { id: 9, label: 'SE', nombre: 'SEPTIEMBRE' },
+    { id: 10, label: 'OC', nombre: 'OCTUBRE' },
+    { id: 11, label: 'NO', nombre: 'NOVIEMBRE' },
+    { id: 12, label: 'DIC', nombre: 'DICIEMBRE' }
   ]
 
   // Función para cargar los años disponibles
@@ -52,8 +53,8 @@ function App(): JSX.Element {
       anio,
       mes: mesSeleccionado
     })) as Registro[]
-    console.log('Datos recibidos:', res) // <-- Para ver si SQL devolvió algo
     setDatos(res)
+    setConteo(res.length)
   }
 
   // la tabla se limpia y trae los datos nuevos automáticamente.
@@ -111,7 +112,7 @@ function App(): JSX.Element {
         {/* Área de Tabla */}
         <section style={styles.tableArea}>
           <h2 style={styles.tableTitle}>
-            INGRESOS DE {meses.find((m) => m.id === mesSeleccionado)?.label} {anio}
+            INGRESOS DE {meses.find((m) => m.id === mesSeleccionado)?.nombre} {anio} {conteo ? `- Total: ${conteo}` : ''}
           </h2>
           <div style={styles.tableWrapper}>
             <table style={styles.table}>
@@ -149,7 +150,7 @@ function App(): JSX.Element {
                   <tr>
                     <td colSpan={5} style={{ textAlign: 'center', padding: '40px', color: '#888' }}>
                       No se encontraron registros para{' '}
-                      {meses.find((m) => m.id === mesSeleccionado)?.label} {anio}.
+                      {meses.find((m) => m.id === mesSeleccionado)?.nombre} {anio}.
                     </td>
                   </tr>
                 )}
@@ -208,7 +209,11 @@ const styles: { [key: string]: React.CSSProperties } = {
     backgroundColor: '#1e1e2f',
     padding: '25px',
     borderRadius: '20px',
-    border: '1px solid #333'
+    border: '1px solid #333',
+    display: 'flex',
+    flexDirection: 'column',
+    height: 'calc(100vh - 120px)',
+    overflow: 'hidden'
   },
   tableTitle: {
     fontSize: '18px',
@@ -218,20 +223,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     letterSpacing: '2px',
     color: '#00d8ff'
   },
-  tableWrapper: { overflowX: 'auto' },
-  table: { width: '100%', borderCollapse: 'collapse', fontSize: '13px', textAlign: 'left' },
-
-  tableArea: {
-    backgroundColor: '#1e1e2f',
-    padding: '25px',
-    borderRadius: '20px',
-    border: '1px solid #333',
-    display: 'flex',
-    flexDirection: 'column',
-    height: 'calc(100vh - 120px)',
-    overflow: 'hidden'
-  },
-
   tableWrapper: {
     overflowY: 'auto',
     overflowX: 'auto',
@@ -239,7 +230,6 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginTop: '10px',
     paddingRight: '5px'
   },
-
   table: {
     width: '100%',
     borderCollapse: 'collapse',

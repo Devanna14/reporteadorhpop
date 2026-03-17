@@ -5,11 +5,12 @@ import icon from '../../resources/icon.png?asset'
 import sql from 'mssql'
 import 'dotenv/config'
 
+// Cambia tus líneas por esto (añadiendo 'as any')
 const dbConfig = {
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  server: process.env.DB_SERVER,
-  database: process.env.DB_DATABASE,
+  user: (import.meta.env as any).MAIN_VITE_DB_USER,
+  password: (import.meta.env as any).MAIN_VITE_DB_PASSWORD,
+  server: (import.meta.env as any).MAIN_VITE_DB_SERVER,
+  database: (import.meta.env as any).MAIN_VITE_DB_DATABASE,
   options: { encrypt: false, trustServerCertificate: true }
 }
 
